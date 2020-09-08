@@ -1,8 +1,29 @@
 import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
+import java.awt.event.ActionListener;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
 
 public class Popup {
 
@@ -37,27 +58,117 @@ public class Popup {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 400, 250);
+		frame.setBounds(100, 100, 402, 283);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+
+		List<Users> users = new ArrayList<Users>();
+		users.add(new Users(0,"Cipi","Ciprian","Aninoiu"));
+		users.add(new Users(1,"Deiu","Andrei","Ion"));
+		users.add(new Users(2,"Tobi","Andrei","Pop"));
+		users.add(new Users(3,"johndoe","John","Doormat"));
+		users.add(new Users(4,"lica1337","Lica","Samadau"));
+		users.add(new Users(5,"Cipi","Ciprian","Aninoiu"));
+		users.add(new Users(6,"Deiu","Andrei","Ion"));
+		users.add(new Users(7,"Tobi","Andrei","Pop"));
+		users.add(new Users(8,"johndoe","John","Doormat"));
+		users.add(new Users(9,"lica1337","Lica","Samadau"));
+		users.add(new Users(10,"Cipi","Ciprian","Aninoiu"));
+		users.add(new Users(11,"Deiu","Andrei","Ion"));
+		users.add(new Users(12,"Tobi","Andrei","Pop"));
+		users.add(new Users(13,"johndoe","John","Doormat"));
+		users.add(new Users(14,"lica1337","Lica","Samadau"));
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 11, 354, 189);
+		frame.getContentPane().add(scrollPane);
+		
 		
 		table = new JTable();
+		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"Login", "First Name", "Last Name"},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
+				{users.get(0).getLogin_name(), users.get(0).getFirst_name(), users.get(0).getLast_name()},
+				{users.get(1).getLogin_name(), users.get(1).getFirst_name(), users.get(1).getLast_name()},
+				{users.get(2).getLogin_name(), users.get(2).getFirst_name(), users.get(2).getLast_name()},
+				{users.get(3).getLogin_name(), users.get(3).getFirst_name(), users.get(3).getLast_name()},
+				{users.get(4).getLogin_name(), users.get(4).getFirst_name(), users.get(4).getLast_name()},
+				{users.get(5).getLogin_name(), users.get(5).getFirst_name(), users.get(5).getLast_name()},
+				{users.get(6).getLogin_name(), users.get(6).getFirst_name(), users.get(6).getLast_name()},
+				{users.get(7).getLogin_name(), users.get(7).getFirst_name(), users.get(7).getLast_name()},
+				{users.get(8).getLogin_name(), users.get(8).getFirst_name(), users.get(8).getLast_name()},
+				{users.get(9).getLogin_name(), users.get(9).getFirst_name(), users.get(9).getLast_name()},
+				{users.get(10).getLogin_name(), users.get(10).getFirst_name(), users.get(10).getLast_name()},
+				{users.get(11).getLogin_name(), users.get(11).getFirst_name(), users.get(11).getLast_name()},
+				{users.get(12).getLogin_name(), users.get(12).getFirst_name(), users.get(12).getLast_name()},
+				{users.get(13).getLogin_name(), users.get(13).getFirst_name(), users.get(13).getLast_name()},
+				{users.get(14).getLogin_name(), users.get(14).getFirst_name(), users.get(14).getLast_name()},
 			},
 			new String[] {
 				"Login", "First Name", "Last Name"
 			}
 		));
-		table.setBounds(10, 11, 364, 189);
-		frame.getContentPane().add(table);
+		
+//////////////////////////////                        EXPORTING TO an EXCEL FILE                   	//////////////////////////////////////
+		JButton btnNewButton = new JButton("Export");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				FileOutputStream excelFOU = null;
+				BufferedOutputStream excelBOU = null;
+				XSSFWorkbook excelJTableExporter = null;
+				
+			//	Choosing Location For Saving Excel File
+			JFileChooser excelFileChooser = new JFileChooser("C:\\Users\\cipia\\OneDrive\\Desktop\\Excel data");
+			
+			FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
+			excelFileChooser.setFileFilter(fnef);
+			int excelChooser = excelFileChooser.showSaveDialog(null);
+			
+			if(excelChooser == JFileChooser.APPROVE_OPTION){
+
+				try {
+					excelJTableExporter = new XSSFWorkbook();
+					XSSFSheet excelSheet = excelJTableExporter.createSheet("JTable Sheet");
+					//Loop to get jtable columns and rows
+					for (int i = 0; i< table.getRowCount(); i++) {
+						XSSFRow excelRow = excelSheet.createRow(i);
+						for(int j = 0; j < table.getColumnCount(); j++) {
+							XSSFCell excelCell = excelRow.createCell(j);
+						excelCell.setCellValue(table.getValueAt(i, j).toString());
+						}
+					}
+					excelFOU = new FileOutputStream(excelFileChooser.getSelectedFile() +".xlsx");
+					excelBOU = new BufferedOutputStream(excelFOU);
+					excelJTableExporter.write(excelBOU);
+					JOptionPane.showMessageDialog(null,"Exported Succesfully");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				finally {
+					try {
+						if(excelBOU != null) {
+							excelBOU.close();
+						}
+						if(excelFOU != null) {
+							excelFOU.close();
+						}
+						if(excelJTableExporter != null) {
+							excelJTableExporter.close();
+						}
+					} catch(IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+			  
+		    }
+		  }
+		});
+		btnNewButton.setBounds(145, 211, 89, 23);
+		frame.getContentPane().add(btnNewButton);
 	}
 }
