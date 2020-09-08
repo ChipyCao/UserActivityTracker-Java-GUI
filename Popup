@@ -1,28 +1,26 @@
 import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
-
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-
 import java.awt.event.ActionListener;
 import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class Popup {
@@ -30,6 +28,33 @@ public class Popup {
 	private JFrame frame;
 	private JTable table;
 
+	static Connection connection = null;
+	static String databaseName = "";
+	static String url = "jdbc:mysql://localhost:3306/usersdb";
+	static String username = "root";
+	static String password = "ciorba1998";
+	
+	
+	
+	public ArrayList<Users> userList(){
+		ArrayList<Users> userList = new ArrayList<>();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			connection = DriverManager.getConnection(url, username, password);
+			String query1="SELECT * FROM users";
+			Statement st= connection.createStatement();
+			ResultSet rs= st.executeQuery(query1);
+			Users user;
+			while(rs.next()) {
+				user= new Users(rs.getInt("id"),rs.getString("login_name"),rs.getString("first_name"),rs.getString("last_name"));
+				userList.add(user);
+			}
+		 }
+		 catch(Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+		return userList;
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -61,54 +86,39 @@ public class Popup {
 		frame.setBounds(100, 100, 402, 283);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
-		List<Users> users = new ArrayList<Users>();
-		users.add(new Users(0,"Cipi","Ciprian","Aninoiu"));
-		users.add(new Users(1,"Deiu","Andrei","Ion"));
-		users.add(new Users(2,"Tobi","Andrei","Pop"));
-		users.add(new Users(3,"johndoe","John","Doormat"));
-		users.add(new Users(4,"lica1337","Lica","Samadau"));
-		users.add(new Users(5,"Cipi","Ciprian","Aninoiu"));
-		users.add(new Users(6,"Deiu","Andrei","Ion"));
-		users.add(new Users(7,"Tobi","Andrei","Pop"));
-		users.add(new Users(8,"johndoe","John","Doormat"));
-		users.add(new Users(9,"lica1337","Lica","Samadau"));
-		users.add(new Users(10,"Cipi","Ciprian","Aninoiu"));
-		users.add(new Users(11,"Deiu","Andrei","Ion"));
-		users.add(new Users(12,"Tobi","Andrei","Pop"));
-		users.add(new Users(13,"johndoe","John","Doormat"));
-		users.add(new Users(14,"lica1337","Lica","Samadau"));
+		
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 354, 189);
 		frame.getContentPane().add(scrollPane);
 		
+		ArrayList<Users> list = userList();
+		
+
+				
 		
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"Login", "First Name", "Last Name"},
-				{users.get(0).getLogin_name(), users.get(0).getFirst_name(), users.get(0).getLast_name()},
-				{users.get(1).getLogin_name(), users.get(1).getFirst_name(), users.get(1).getLast_name()},
-				{users.get(2).getLogin_name(), users.get(2).getFirst_name(), users.get(2).getLast_name()},
-				{users.get(3).getLogin_name(), users.get(3).getFirst_name(), users.get(3).getLast_name()},
-				{users.get(4).getLogin_name(), users.get(4).getFirst_name(), users.get(4).getLast_name()},
-				{users.get(5).getLogin_name(), users.get(5).getFirst_name(), users.get(5).getLast_name()},
-				{users.get(6).getLogin_name(), users.get(6).getFirst_name(), users.get(6).getLast_name()},
-				{users.get(7).getLogin_name(), users.get(7).getFirst_name(), users.get(7).getLast_name()},
-				{users.get(8).getLogin_name(), users.get(8).getFirst_name(), users.get(8).getLast_name()},
-				{users.get(9).getLogin_name(), users.get(9).getFirst_name(), users.get(9).getLast_name()},
-				{users.get(10).getLogin_name(), users.get(10).getFirst_name(), users.get(10).getLast_name()},
-				{users.get(11).getLogin_name(), users.get(11).getFirst_name(), users.get(11).getLast_name()},
-				{users.get(12).getLogin_name(), users.get(12).getFirst_name(), users.get(12).getLast_name()},
-				{users.get(13).getLogin_name(), users.get(13).getFirst_name(), users.get(13).getLast_name()},
-				{users.get(14).getLogin_name(), users.get(14).getFirst_name(), users.get(14).getLast_name()},
+				{list.get(0).getLogin_name(), list.get(0).getFirst_name(), list.get(0).getLast_name()},
+				{list.get(1).getLogin_name(), list.get(1).getFirst_name(), list.get(1).getLast_name()},
+				{list.get(2).getLogin_name(), list.get(2).getFirst_name(), list.get(2).getLast_name()},
+				{list.get(3).getLogin_name(), list.get(3).getFirst_name(), list.get(3).getLast_name()},
+				{list.get(4).getLogin_name(), list.get(4).getFirst_name(), list.get(4).getLast_name()},
+				{list.get(5).getLogin_name(), list.get(5).getFirst_name(), list.get(5).getLast_name()},
+				{list.get(6).getLogin_name(), list.get(6).getFirst_name(), list.get(6).getLast_name()},
+				{list.get(7).getLogin_name(), list.get(7).getFirst_name(), list.get(7).getLast_name()},
+				{list.get(8).getLogin_name(), list.get(8).getFirst_name(), list.get(8).getLast_name()},
+				
 			},
 			new String[] {
 				"Login", "First Name", "Last Name"
 			}
 		));
+		
+		
 		
 //////////////////////////////                        EXPORTING TO an EXCEL FILE                   	//////////////////////////////////////
 		JButton btnNewButton = new JButton("Export");
