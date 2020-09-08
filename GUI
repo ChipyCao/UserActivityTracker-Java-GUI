@@ -1,69 +1,73 @@
 import java.awt.EventQueue;
-import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableModel;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import javax.swing.JScrollPane;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import com.toedter.calendar.JMonthChooser;
+import com.toedter.calendar.JYearChooser;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 
-public class Popup {
+public class GUI extends JFrame {
 
-	private JFrame frame;
-	private JTable table;
-
+	//DB Connection variables
 	static Connection connection = null;
 	static String databaseName = "";
 	static String url = "jdbc:mysql://localhost:3306/usersdb";
 	static String username = "root";
 	static String password = "ciorba1998";
 	
-	
-	
-	public ArrayList<Users> userList(){
-		ArrayList<Users> userList = new ArrayList<>();
+
+	public ArrayList<Counters> counterList(){
+		ArrayList<Counters> counterList = new ArrayList<>();
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			connection = DriverManager.getConnection(url, username, password);
-			String query1="SELECT * FROM users";
+			String query0="SELECT * FROM counters";
 			Statement st= connection.createStatement();
-			ResultSet rs= st.executeQuery(query1);
-			Users user;
+			ResultSet rs= st.executeQuery(query0);
+			Counters counter;
 			while(rs.next()) {
-				user= new Users(rs.getInt("id"),rs.getString("login_name"),rs.getString("first_name"),rs.getString("last_name"));
-				userList.add(user);
+				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getString("date_of_change"),rs.getInt("user_id"));
+				counterList.add(counter);
 			}
 		 }
 		 catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 		}
-		return userList;
+		return counterList;
 	}
+	
+	
+	private JPanel contentPane;
+	private JTextField textField_1;
+	private JTextField textField_2;
+
 	/**
 	 * Launch the application.
+	 * @throws ClassNotFoundException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws SQLException 
 	 */
-	public static void NewScreen() {
+	public static void main(String[] args) {
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Popup window = new Popup();
-					window.frame.setVisible(true);
+					GUI frame = new GUI();
+					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -72,113 +76,63 @@ public class Popup {
 	}
 
 	/**
-	 * Create the application.
+	 * Create the frame.
 	 */
-	public Popup() {
-		initialize();
-	}
+	public GUI() {
+		ArrayList<Counters> list = counterList();
+		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 682, 400);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel Month = new JLabel(" Month:");
+		Month.setBounds(77, 76, 106, 14);
+		contentPane.add(Month);
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 402, 283);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+	
 		
+		JLabel lblNewLabel = new JLabel(" Users this month:");
+		lblNewLabel.setBounds(77, 107, 106, 14);
+		contentPane.add(lblNewLabel);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 354, 189);
-		frame.getContentPane().add(scrollPane);
+		textField_1 = new JTextField();
+		textField_1.setBounds(193, 104, 330, 20);
+		contentPane.add(textField_1);
+		textField_1.setColumns(10);
 		
-		ArrayList<Users> list = userList();
+		JLabel lblNewLabel_1 = new JLabel("Days used:");
+		lblNewLabel_1.setBounds(81, 138, 102, 14);
+		contentPane.add(lblNewLabel_1);
 		
+		textField_2 = new JTextField(list.get(1).getCounter_value());
+		textField_2.setBounds(193, 135, 330, 20);
+		contentPane.add(textField_2);
+		textField_2.setColumns(10);
 
-				
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"Login", "First Name", "Last Name"},
-				{list.get(0).getLogin_name(), list.get(0).getFirst_name(), list.get(0).getLast_name()},
-				{list.get(1).getLogin_name(), list.get(1).getFirst_name(), list.get(1).getLast_name()},
-				{list.get(2).getLogin_name(), list.get(2).getFirst_name(), list.get(2).getLast_name()},
-				{list.get(3).getLogin_name(), list.get(3).getFirst_name(), list.get(3).getLast_name()},
-				{list.get(4).getLogin_name(), list.get(4).getFirst_name(), list.get(4).getLast_name()},
-				{list.get(5).getLogin_name(), list.get(5).getFirst_name(), list.get(5).getLast_name()},
-				{list.get(6).getLogin_name(), list.get(6).getFirst_name(), list.get(6).getLast_name()},
-				{list.get(7).getLogin_name(), list.get(7).getFirst_name(), list.get(7).getLast_name()},
-				{list.get(8).getLogin_name(), list.get(8).getFirst_name(), list.get(8).getLast_name()},
-				
-			},
-			new String[] {
-				"Login", "First Name", "Last Name"
-			}
-		));
-		
-		
-		
-//////////////////////////////                        EXPORTING TO an EXCEL FILE                   	//////////////////////////////////////
-		JButton btnNewButton = new JButton("Export");
+		JButton btnNewButton = new JButton("Show Users");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				FileOutputStream excelFOU = null;
-				BufferedOutputStream excelBOU = null;
-				XSSFWorkbook excelJTableExporter = null;
 				
-			//	Choosing Location For Saving Excel File
-			JFileChooser excelFileChooser = new JFileChooser("C:\\Users\\cipia\\OneDrive\\Desktop\\Excel data");
-			
-			FileNameExtensionFilter fnef = new FileNameExtensionFilter("EXCEL FILES", "xls", "xlsx", "xlsm");
-			excelFileChooser.setFileFilter(fnef);
-			int excelChooser = excelFileChooser.showSaveDialog(null);
-			
-			if(excelChooser == JFileChooser.APPROVE_OPTION){
-
-				try {
-					excelJTableExporter = new XSSFWorkbook();
-					XSSFSheet excelSheet = excelJTableExporter.createSheet("JTable Sheet");
-					//Loop to get jtable columns and rows
-					for (int i = 0; i< table.getRowCount(); i++) {
-						XSSFRow excelRow = excelSheet.createRow(i);
-						for(int j = 0; j < table.getColumnCount(); j++) {
-							XSSFCell excelCell = excelRow.createCell(j);
-						excelCell.setCellValue(table.getValueAt(i, j).toString());
-						}
-					}
-					excelFOU = new FileOutputStream(excelFileChooser.getSelectedFile() +".xlsx");
-					excelBOU = new BufferedOutputStream(excelFOU);
-					excelJTableExporter.write(excelBOU);
-					JOptionPane.showMessageDialog(null,"Exported Succesfully");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				finally {
-					try {
-						if(excelBOU != null) {
-							excelBOU.close();
-						}
-						if(excelFOU != null) {
-							excelFOU.close();
-						}
-						if(excelJTableExporter != null) {
-							excelJTableExporter.close();
-						}
-					} catch(IOException ex) {
-						ex.printStackTrace();
-					}
-				}
-			  
-		    }
-		  }
+				Popup nw = new Popup();
+				nw.NewScreen();
+			}
 		});
-		btnNewButton.setBounds(145, 211, 89, 23);
-		frame.getContentPane().add(btnNewButton);
+		btnNewButton.setBounds(269, 206, 132, 23);
+		contentPane.add(btnNewButton);
+		
+		JMonthChooser monthChooser = new JMonthChooser();
+		monthChooser.getComboBox().addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+			}
+		});
+		monthChooser.setBounds(193, 70, 116, 20);
+		contentPane.add(monthChooser);
+		
+		JYearChooser yearChooser = new JYearChooser();
+		yearChooser.setBounds(308, 70, 47, 20);
+		contentPane.add(yearChooser);	
 	}
 }
