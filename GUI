@@ -13,11 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JMonthChooser;
+import javax.swing.JTextArea;
+import com.toedter.calendar.JYearChooser;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class GUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
 
@@ -55,10 +59,6 @@ public class GUI extends JFrame {
 
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMMM/yyyy");
 		LocalDateTime now = LocalDateTime.now();
-		textField = new JTextField(dtf.format(now));
-		textField.setBounds(193, 73, 330, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel(" Users this month:");
 		lblNewLabel.setBounds(77, 107, 106, 14);
@@ -89,11 +89,16 @@ public class GUI extends JFrame {
 		btnNewButton.setBounds(269, 206, 132, 23);
 		contentPane.add(btnNewButton);
 		
-
+		JMonthChooser monthChooser = new JMonthChooser();
+		monthChooser.getComboBox().addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+			}
+		});
+		monthChooser.setBounds(193, 70, 116, 20);
+		contentPane.add(monthChooser);
 		
-		
-		
-	
+		JYearChooser yearChooser = new JYearChooser();
+		yearChooser.setBounds(308, 70, 47, 20);
+		contentPane.add(yearChooser);
 	}
-
 }
