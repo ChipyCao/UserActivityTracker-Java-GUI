@@ -22,6 +22,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import com.jgoodies.forms.factories.DefaultComponentFactory;
+import java.awt.Font;
 
 public class Popup {
 
@@ -84,13 +87,13 @@ public class Popup {
 	 */
 	private void initialize(int x[]) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 402, 248);
+		frame.setBounds(100, 100, 391, 277);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
 		//Setting up a scrollable pane for the table
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 11, 354, 134);
+		scrollPane.setBounds(10, 53, 354, 134);
 		frame.getContentPane().add(scrollPane);
 	
 		//Creating the table & populating it with data from the database
@@ -185,7 +188,13 @@ public class Popup {
 		    }
 		  }
 		});
-		btnNewButton.setBounds(144, 166, 89, 23);
+		btnNewButton.setBounds(140, 198, 89, 23);
 		frame.getContentPane().add(btnNewButton);
+		
+		JLabel lblNewLabel = new JLabel(" Active Users this Month:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblNewLabel.setBounds(80, 19, 219, 23);
+		frame.getContentPane().add(lblNewLabel);
+		
 	}
 }
