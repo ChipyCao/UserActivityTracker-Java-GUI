@@ -11,15 +11,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JMonthChooser;
 import com.toedter.calendar.JYearChooser;
-import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.beans.PropertyChangeEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class GUI extends JFrame {
+public class GUI extends JFrame{
 
 	//DB Connection variables
 	static Connection connection = null;
@@ -28,7 +27,7 @@ public class GUI extends JFrame {
 	static String username = "root";
 	static String password = "ciorba1998";
 	
-
+////Extracting Counter list from the MySQL database
 	public ArrayList<Counters> counterList(){
 		ArrayList<Counters> counterList = new ArrayList<>();
 		try {
@@ -39,7 +38,7 @@ public class GUI extends JFrame {
 			ResultSet rs= st.executeQuery(query0);
 			Counters counter;
 			while(rs.next()) {
-				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getString("date_of_change"),rs.getInt("user_id"));
+				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
 				counterList.add(counter);
 			}
 		 }
@@ -53,14 +52,9 @@ public class GUI extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField_1;
 	private JTextField textField_2;
-
-	/**
-	 * Launch the application.
-	 * @throws ClassNotFoundException 
-	 * @throws IllegalAccessException 
-	 * @throws InstantiationException 
-	 * @throws SQLException 
-	 */
+	private JMonthChooser monthChooser;	
+	
+	
 	public static void main(String[] args) {
 
 		EventQueue.invokeLater(new Runnable() {
@@ -76,10 +70,42 @@ public class GUI extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Creating the frame.
 	 */
+	@SuppressWarnings("deprecation")
 	public GUI() {
 		ArrayList<Counters> list = counterList();
+		int a[]= {0,0,0,0,0,0};		
+		Month sep = new Month(0,0,a);
+		Month oct = new Month(0,0,a);
+		Month nov = new Month(0,0,a);
+		Month dec = new Month(0,0,a);
+
+		for(int i=0;i<list.size();i++)
+		{
+			switch (list.get(i).getDate_of_change().getMonth()){
+			case 8:
+				{
+				sep.users[list.get(i).getUser_id()]+=1;
+				if(sep.users[list.get(i).getUser_id()]==1)
+					sep.nbOfUsers++;}
+			case 9:
+				{
+				oct.users[list.get(i).getUser_id()]+=1;
+				if(oct.users[list.get(i).getUser_id()]==1)
+					oct.nbOfUsers++;}
+			case 10:
+			    {
+				nov.users[list.get(i).getUser_id()]+=1;
+				if(nov.users[list.get(i).getUser_id()]==1)
+					nov.nbOfUsers++;}
+			case 11:
+				{
+				dec.users[list.get(i).getUser_id()]+=1;
+				if(dec.users[list.get(i).getUser_id()]==1)
+					dec.nbOfUsers++;}
+			}
+		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 682, 400);
@@ -92,28 +118,73 @@ public class GUI extends JFrame {
 		Month.setBounds(77, 76, 106, 14);
 		contentPane.add(Month);
 
-	
 		
+		//////////////////////////////////////     Nb of users current month    /////////////////
 		JLabel lblNewLabel = new JLabel(" Users this month:");
 		lblNewLabel.setBounds(77, 107, 106, 14);
 		contentPane.add(lblNewLabel);
-		
-		textField_1 = new JTextField();
+		textField_1 = new JTextField(String.valueOf(sep.nbOfUsers));
 		textField_1.setBounds(193, 104, 330, 20);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
+		
+		
+		////////////////////////////////////// Nb of days used in current month //////////////////
 		JLabel lblNewLabel_1 = new JLabel("Days used:");
 		lblNewLabel_1.setBounds(81, 138, 102, 14);
 		contentPane.add(lblNewLabel_1);
-		
-		textField_2 = new JTextField(list.get(1).getCounter_value());
+		textField_2 = new JTextField(String.valueOf(sep.nbOfDaysUsed));
 		textField_2.setBounds(193, 135, 330, 20);
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
+		
+		monthChooser = new JMonthChooser();
 
+		monthChooser.getMonth();
+		monthChooser.setBounds(193, 70, 116, 20);
+		contentPane.add(monthChooser);
+
+		/////////////////////////////////////////////////////    Month Changed Event /////////////////
+		
+		monthChooser.getComboBox().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				switch(monthChooser.getMonth()) {
+				case 8:
+					{
+					textField_1.setText(String.valueOf(sep.nbOfUsers));
+					textField_2.setText(String.valueOf(sep.nbOfDaysUsed));}
+				case 9:
+					{
+					textField_1.setText(String.valueOf(oct.nbOfUsers));
+					textField_2.setText(String.valueOf(oct.nbOfDaysUsed));
+					System.out.print("oct");}
+				case 10:
+					{
+					textField_1.setText(String.valueOf(nov.nbOfUsers));
+					textField_2.setText(String.valueOf(nov.nbOfDaysUsed));
+					System.out.print("nov");}
+				case 11:
+					{
+					textField_1.setText(String.valueOf(dec.nbOfUsers));
+					textField_2.setText(String.valueOf(dec.nbOfDaysUsed));
+					System.out.print("dec");}
+				}
+			}
+		});
+		///////////////////////////////////////////////////////////////////////////////////////////////
+		
+		
+		
+		JYearChooser yearChooser = new JYearChooser();
+		yearChooser.setBounds(308, 70, 47, 20);
+		contentPane.add(yearChooser);	
+		
+		
 		JButton btnNewButton = new JButton("Show Users");
 		btnNewButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent arg0) {
 				
 				Popup nw = new Popup();
@@ -122,17 +193,5 @@ public class GUI extends JFrame {
 		});
 		btnNewButton.setBounds(269, 206, 132, 23);
 		contentPane.add(btnNewButton);
-		
-		JMonthChooser monthChooser = new JMonthChooser();
-		monthChooser.getComboBox().addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-			}
-		});
-		monthChooser.setBounds(193, 70, 116, 20);
-		contentPane.add(monthChooser);
-		
-		JYearChooser yearChooser = new JYearChooser();
-		yearChooser.setBounds(308, 70, 47, 20);
-		contentPane.add(yearChooser);	
 	}
 }
