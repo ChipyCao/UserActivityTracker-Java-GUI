@@ -1,12 +1,11 @@
 public class Month {
 	int nbOfDaysUsed;
 	int nbOfUsers;
-	int users[];
-	public Month(int nbOfDaysUsed, int nbOfUsers, int[] users) {
+	public int users[] = {0,0,0,0,0,0,0,0,0};
+	public Month(int nbOfDaysUsed, int nbOfUsers) {
 		super();
 		this.nbOfDaysUsed = nbOfDaysUsed;
 		this.nbOfUsers = nbOfUsers;
-		this.users = users;
 	}
 	public int getNbOfDaysUsed() {
 		return nbOfDaysUsed;
