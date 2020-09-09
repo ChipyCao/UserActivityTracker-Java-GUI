@@ -1,0 +1,93 @@
+import java.awt.EventQueue;
+import java.sql.Connection;
+import java.util.Date;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+
+public class SecondFrame extends JFrame {
+
+	//DB Connection variables
+	static Connection connection = null;
+	static String databaseName = "";
+	static String url = "jdbc:mysql://localhost:3306/usersdb";
+	static String username = "root";
+	static String password = "ciorba1998";
+	
+	
+	private JPanel contentPane;
+	private JTable table;
+
+
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					SecondFrame frame = new SecondFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public SecondFrame() {	
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 575, 365);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+			}
+		});
+		Date date = new Date();
+		dateChooser.setDate(date);
+		dateChooser.setBounds(107, 52, 101, 20);
+		contentPane.add(dateChooser);
+		
+		JDateChooser dateChooser_1 = new JDateChooser();
+		dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+			}
+		});
+		dateChooser_1.setDate(date);
+		dateChooser_1.setBounds(323, 52, 110, 20);
+		contentPane.add(dateChooser_1);
+		
+		JLabel lblNewLabel = new JLabel("Start Date");
+		lblNewLabel.setBounds(129, 33, 58, 14);
+		contentPane.add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("End Date");
+		lblNewLabel_1.setBounds(354, 33, 50, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(98, 116, 354, 134);
+		contentPane.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
+		String[] columnNames = {"Login","First Name","Last Name"};
+		table.setModel(new DefaultTableModel(columnNames,8));	
+	}
+}
