@@ -59,11 +59,11 @@ public class Popup {
 	/**
 	 * Launching the application.
 	 */
-	public static void NewScreen() {
+	public static void NewScreen(int x[]) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Popup window = new Popup();
+					Popup window = new Popup(x);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -75,14 +75,14 @@ public class Popup {
 	/**
 	 * Creating the application.
 	 */
-	public Popup() {
-		initialize();
+	public Popup(int x[]) {
+		initialize(x);
 	}
 
 	/**
 	 * Initializing the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(int x[]) {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 402, 248);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,23 +97,35 @@ public class Popup {
 		ArrayList<Users> list = userList();		
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{list.get(0).getLogin_name(), list.get(0).getFirst_name(), list.get(0).getLast_name()},
-				{list.get(1).getLogin_name(), list.get(1).getFirst_name(), list.get(1).getLast_name()},
-				{list.get(2).getLogin_name(), list.get(2).getFirst_name(), list.get(2).getLast_name()},
-				{list.get(3).getLogin_name(), list.get(3).getFirst_name(), list.get(3).getLast_name()},
-				{list.get(4).getLogin_name(), list.get(4).getFirst_name(), list.get(4).getLast_name()},
-				{list.get(5).getLogin_name(), list.get(5).getFirst_name(), list.get(5).getLast_name()},
-				{list.get(6).getLogin_name(), list.get(6).getFirst_name(), list.get(6).getLast_name()},
-				{list.get(7).getLogin_name(), list.get(7).getFirst_name(), list.get(7).getLast_name()},
-				{list.get(8).getLogin_name(), list.get(8).getFirst_name(), list.get(8).getLast_name()},
-				
-			},
-			new String[] {
-				"Login", "First Name", "Last Name"
+		/*switch(x) {
+		case 8:
+			{
+			int y=
+			break;
 			}
-		));
+		case 9:
+			{
+			break;
+			}
+		case 10:
+			{
+			break;}
+		case 11:
+			{
+			break;}
+		} */
+
+		table.setModel(new DefaultTableModel(x.length,3));
+		int k=0;
+		for(int i=0;i<x.length;i++)  
+			if(x[i]>0)
+				{
+				k++;
+				table.setValueAt(list.get(i).getLogin_name(),k,0);
+				table.setValueAt(list.get(i).getFirst_name(),k,1);
+				table.setValueAt(list.get(i).getLast_name(),k,2);
+				}
+
 		
 //////////////////////////////                        EXPORTING TO an EXCEL FILE                   	//////////////////////////////////////
 		JButton btnNewButton = new JButton("Export");
