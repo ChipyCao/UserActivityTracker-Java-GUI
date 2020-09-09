@@ -15,8 +15,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class GUI extends JFrame{
 
@@ -74,13 +74,11 @@ public class GUI extends JFrame{
 	 */
 	@SuppressWarnings("deprecation")
 	public GUI() {
-		ArrayList<Counters> list = counterList();
-		int a[]= {0,0,0,0,0,0};		
-		Month sep = new Month(0,0,a);
-		Month oct = new Month(0,0,a);
-		Month nov = new Month(0,0,a);
-		Month dec = new Month(0,0,a);
-
+		ArrayList<Counters> list = counterList();	
+		Month sep = new Month(0,0);
+		Month oct = new Month(0,0);
+		Month nov = new Month(0,0);
+		Month dec = new Month(0,0);
 		for(int i=0;i<list.size();i++)
 		{
 			switch (list.get(i).getDate_of_change().getMonth()){
@@ -88,24 +86,29 @@ public class GUI extends JFrame{
 				{
 				sep.users[list.get(i).getUser_id()]+=1;
 				if(sep.users[list.get(i).getUser_id()]==1)
-					sep.nbOfUsers++;}
+					sep.nbOfUsers++;
+				break;}
 			case 9:
 				{
 				oct.users[list.get(i).getUser_id()]+=1;
 				if(oct.users[list.get(i).getUser_id()]==1)
-					oct.nbOfUsers++;}
+					oct.nbOfUsers++;
+				break;}
 			case 10:
 			    {
 				nov.users[list.get(i).getUser_id()]+=1;
 				if(nov.users[list.get(i).getUser_id()]==1)
-					nov.nbOfUsers++;}
+					nov.nbOfUsers++;
+				break;}
 			case 11:
 				{
 				dec.users[list.get(i).getUser_id()]+=1;
 				if(dec.users[list.get(i).getUser_id()]==1)
-					dec.nbOfUsers++;}
+					dec.nbOfUsers++;
+				break;}
 			}
 		}
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 682, 400);
@@ -118,7 +121,7 @@ public class GUI extends JFrame{
 		Month.setBounds(77, 76, 106, 14);
 		contentPane.add(Month);
 
-		
+
 		//////////////////////////////////////     Nb of users current month    /////////////////
 		JLabel lblNewLabel = new JLabel(" Users this month:");
 		lblNewLabel.setBounds(77, 107, 106, 14);
@@ -141,38 +144,46 @@ public class GUI extends JFrame{
 		
 		monthChooser = new JMonthChooser();
 
+
+
 		monthChooser.getMonth();
 		monthChooser.setBounds(193, 70, 116, 20);
 		contentPane.add(monthChooser);
 
 		/////////////////////////////////////////////////////    Month Changed Event /////////////////
-		
-		monthChooser.getComboBox().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
+		monthChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent Month) {
 				switch(monthChooser.getMonth()) {
 				case 8:
 					{
 					textField_1.setText(String.valueOf(sep.nbOfUsers));
-					textField_2.setText(String.valueOf(sep.nbOfDaysUsed));}
+					textField_2.setText(String.valueOf(sep.nbOfDaysUsed));
+					System.out.print("sept");
+					break;
+					}
 				case 9:
 					{
 					textField_1.setText(String.valueOf(oct.nbOfUsers));
 					textField_2.setText(String.valueOf(oct.nbOfDaysUsed));
-					System.out.print("oct");}
+					System.out.print("oct");
+					break;
+					}
 				case 10:
 					{
 					textField_1.setText(String.valueOf(nov.nbOfUsers));
 					textField_2.setText(String.valueOf(nov.nbOfDaysUsed));
-					System.out.print("nov");}
+					System.out.print("nov");
+					break;}
 				case 11:
 					{
 					textField_1.setText(String.valueOf(dec.nbOfUsers));
 					textField_2.setText(String.valueOf(dec.nbOfDaysUsed));
-					System.out.print("dec");}
+					System.out.print("dec");
+					break;}
 				}
 			}
 		});
+
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
@@ -186,9 +197,30 @@ public class GUI extends JFrame{
 		btnNewButton.addActionListener(new ActionListener() {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent arg0) {
-				
-				Popup nw = new Popup();
-				nw.NewScreen();
+				switch(monthChooser.getMonth()) {
+				case 8:
+					{
+					Popup nw = new Popup(sep.users);
+					nw.NewScreen(sep.users);
+					break;
+					}
+				case 9:
+					{
+					Popup nw = new Popup(oct.users);
+					nw.NewScreen(oct.users);
+					break;
+					}
+				case 10:
+					{
+					Popup nw = new Popup(nov.users);
+					nw.NewScreen(nov.users);
+					break;}
+				case 11:
+					{
+					Popup nw = new Popup(dec.users);
+					nw.NewScreen(dec.users);
+					break;}
+				}
 			}
 		});
 		btnNewButton.setBounds(269, 206, 132, 23);
