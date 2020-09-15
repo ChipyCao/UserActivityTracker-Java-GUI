@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 
@@ -47,6 +48,7 @@ public class GUI extends JFrame{
 		}
 		return counterList;
 	}
+	
 	
 	
 	private JPanel contentPane;
@@ -87,24 +89,28 @@ public class GUI extends JFrame{
 				sep.users[list.get(i).getUser_id()]+=1;
 				if(sep.users[list.get(i).getUser_id()]==1)
 					sep.nbOfUsers++;
+				sep.setNbOfDaysUsed(sep.getNbOfDaysUsed()+1);
 				break;}
 			case 9:
 				{
 				oct.users[list.get(i).getUser_id()]+=1;
 				if(oct.users[list.get(i).getUser_id()]==1)
 					oct.nbOfUsers++;
+				oct.setNbOfDaysUsed(oct.getNbOfDaysUsed()+1);
 				break;}
 			case 10:
 			    {
 				nov.users[list.get(i).getUser_id()]+=1;
 				if(nov.users[list.get(i).getUser_id()]==1)
 					nov.nbOfUsers++;
+				nov.setNbOfDaysUsed(nov.getNbOfDaysUsed()+1);
 				break;}
 			case 11:
 				{
 				dec.users[list.get(i).getUser_id()]+=1;
 				if(dec.users[list.get(i).getUser_id()]==1)
 					dec.nbOfUsers++;
+				dec.setNbOfDaysUsed(dec.getNbOfDaysUsed()+1);
 				break;}
 			}
 		}
@@ -226,9 +232,15 @@ public class GUI extends JFrame{
 		JButton btnNewButton_1 = new JButton("Switch to 2nd frame");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				SecondFrame secondFrame = new SecondFrame();
-				secondFrame.setVisible(true);
-				dispose();
+				SecondFrame secondFrame;
+				try {
+					secondFrame = new SecondFrame();
+					secondFrame.setVisible(true);
+					dispose();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
