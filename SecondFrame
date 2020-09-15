@@ -1,12 +1,16 @@
 import java.awt.EventQueue;
 import java.sql.Connection;
-import java.util.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.beans.PropertyChangeListener;
@@ -21,10 +25,8 @@ public class SecondFrame extends JFrame {
 	static String username = "root";
 	static String password = "ciorba1998";
 	
-	
 	private JPanel contentPane;
 	private JTable table;
-
 
 	
 	/**
@@ -45,33 +47,93 @@ public class SecondFrame extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws ParseException 
 	 */
-	public SecondFrame() {	
+	public SecondFrame() throws ParseException {	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 575, 365);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+				
+		ArrayList<Counters> counterList = new ArrayList<>();		
+		ArrayList<Users> userList = new ArrayList<>();
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-			}
-		});
-		Date date = new Date();
+		
+		JDateChooser dateChooser = new JDateChooser();		
+		dateChooser.setDateFormatString("MMMM yyyy");
+		    
+		long millis=System.currentTimeMillis();  
+	    java.sql.Date date = new java.sql.Date(millis);  
 		dateChooser.setDate(date);
-		dateChooser.setBounds(107, 52, 101, 20);
+		dateChooser.setBounds(98, 52, 127, 20);
 		contentPane.add(dateChooser);
 		
+		
 		JDateChooser dateChooser_1 = new JDateChooser();
-		dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-			}
-		});
+		dateChooser_1.setDateFormatString("MMMM yyyy");
 		dateChooser_1.setDate(date);
-		dateChooser_1.setBounds(323, 52, 110, 20);
+		dateChooser_1.setBounds(313, 52, 127, 20);
 		contentPane.add(dateChooser_1);
+		
+		
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+				}
+				
+			});
+		
+		
+		dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {			
+			}
+			
+		});
+		
+		int[] users= {0,0,0,0,0,0,0,0,0};
+		java.sql.PreparedStatement myStmt = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			connection = DriverManager.getConnection(url, username, password);
+			myStmt = connection.prepareStatement("SELECT * FROM counters WHERE date_of_change >= '2020-09-01 00:00:00.000000' AND date_of_change <= '2020-09-30 00:00:00.000000'");
+			ResultSet rs= myStmt.executeQuery();
+			Counters counter;
+			while(rs.next()) {
+				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+				users[rs.getInt("user_id")]++;
+				counterList.add(counter);
+			}
+		 }
+		 catch(Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			connection = DriverManager.getConnection(url, username, password);
+			for(int j=0;j<users.length;j++)
+			  if(users[j]>0)
+				{	
+				 myStmt = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+				 myStmt.setInt(1, j);
+			
+				ResultSet rs= myStmt.executeQuery();
+				Users user;
+				while(rs.next()) {
+					user= new Users(rs.getInt("id"),rs.getString("login_name"),rs.getString("first_name"),rs.getString("last_name"));
+					userList.add(user);
+					}
+			}
+		 }
+		 catch(Exception e) {
+			JOptionPane.showMessageDialog(null, e);
+		}
+		
+		
+		
+		
+		
 		
 		JLabel lblNewLabel = new JLabel("Start Date");
 		lblNewLabel.setBounds(129, 33, 58, 14);
@@ -88,6 +150,14 @@ public class SecondFrame extends JFrame {
 		table = new JTable();
 		scrollPane.setViewportView(table);
 		String[] columnNames = {"Login","First Name","Last Name"};
-		table.setModel(new DefaultTableModel(columnNames,8));	
+		table.setModel(new DefaultTableModel(columnNames,counterList.size()));
+		int k=-1;
+		for(int i=0;i<userList.size();i++)  
+				{
+				table.setValueAt(userList.get(i).getLogin_name(),i,0);
+				table.setValueAt(userList.get(i).getFirst_name(),i,1);
+				table.setValueAt(userList.get(i).getLast_name(),i,2);
+				}
+	
 	}
 }
