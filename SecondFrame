@@ -15,6 +15,10 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JCheckBox;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SecondFrame extends JFrame {
 
@@ -27,6 +31,7 @@ public class SecondFrame extends JFrame {
 	
 	private JPanel contentPane;
 	private JTable table;
+	private JTable table_1;
 
 	
 	/**
@@ -44,14 +49,14 @@ public class SecondFrame extends JFrame {
 			}
 		});
 	}
-
+	
 	/**
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
 	public SecondFrame() throws ParseException {	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 575, 365);
+		setBounds(100, 100, 576, 544);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -77,19 +82,6 @@ public class SecondFrame extends JFrame {
 		dateChooser_1.setBounds(313, 52, 127, 20);
 		contentPane.add(dateChooser_1);
 		
-		
-		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent arg0) {
-				}
-				
-			});
-		
-		
-		dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {			
-			}
-			
-		});
 		
 		int[] users= {0,0,0,0,0,0,0,0,0};
 		java.sql.PreparedStatement myStmt = null;
@@ -129,11 +121,7 @@ public class SecondFrame extends JFrame {
 		 catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 		}
-		
-		
-		
-		
-		
+				
 		
 		JLabel lblNewLabel = new JLabel("Start Date");
 		lblNewLabel.setBounds(129, 33, 58, 14);
@@ -144,20 +132,162 @@ public class SecondFrame extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(98, 116, 354, 134);
+		scrollPane.setBounds(98, 92, 354, 134);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table_1 = new JTable();
 		scrollPane.setViewportView(table);
 		String[] columnNames = {"Login","First Name","Last Name"};
+		String[] columnNames_1 = {"Counter Name","Counter Value"};
 		table.setModel(new DefaultTableModel(columnNames,counterList.size()));
-		int k=-1;
-		for(int i=0;i<userList.size();i++)  
-				{
-				table.setValueAt(userList.get(i).getLogin_name(),i,0);
-				table.setValueAt(userList.get(i).getFirst_name(),i,1);
-				table.setValueAt(userList.get(i).getLast_name(),i,2);
+		table_1.setModel(new DefaultTableModel(columnNames_1,counterList.size()));
+		
+		JCheckBox chckbxNewCheckBox = new JCheckBox("All Users");
+		chckbxNewCheckBox.setBounds(53, 256, 80, 23);
+		contentPane.add(chckbxNewCheckBox);
+		
+		JButton btnNewButton = new JButton("Show Selected Counters");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnNewButton.setBounds(139, 256, 162, 23);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Show ALL Counters");
+		btnNewButton_1.setBounds(329, 256, 153, 23);
+		contentPane.add(btnNewButton_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(98, 316, 354, 134);
+		contentPane.add(scrollPane_1);
+		scrollPane_1.setViewportView(table_1);
+		
+		
+
+		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent arg0) {
+				ArrayList<Counters> counterList0 = new ArrayList<>();		
+				ArrayList<Users> userList0 = new ArrayList<>();
+				int[] users1= {0,0,0,0,0,0,0,0,0};
+
+				java.util.Date dt = dateChooser.getDate();
+				java.util.Date dt1 = dateChooser_1.getDate();
+				java.text.SimpleDateFormat sdf = 
+				     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String date = sdf.format(dt);
+				String date1 = sdf.format(dt1);
+				java.sql.PreparedStatement myStmt = null;
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					connection = DriverManager.getConnection(url, username, password);
+					myStmt = connection.prepareStatement("SELECT * FROM counters WHERE date_of_change >= ? AND date_of_change <= ?");
+					myStmt.setString(1, date);
+					myStmt.setString(2, date1);
+					ResultSet rs= myStmt.executeQuery();
+					Counters counter;
+					while(rs.next()) {
+						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+						users1[rs.getInt("user_id")]++;
+						counterList0.add(counter);
+					}
+				 }
+				 catch(Exception e) {
+					JOptionPane.showMessageDialog(null, e);
 				}
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					connection = DriverManager.getConnection(url, username, password);
+					for(int j=0;j<users1.length;j++)
+					  if(users1[j]>0)
+						{	
+						 myStmt = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+						 myStmt.setInt(1, j);
+					
+						ResultSet rs= myStmt.executeQuery();
+						Users user;
+						while(rs.next()) {
+							user= new Users(rs.getInt("id"),rs.getString("login_name"),rs.getString("first_name"),rs.getString("last_name"));
+							userList0.add(user);
+							}
+					}
+					table.setModel(new DefaultTableModel(columnNames,counterList0.size()));
+					for(int i=0;i<userList0.size();i++)  
+					{
+					table.setValueAt(userList0.get(i).getLogin_name(),i,0);
+					table.setValueAt(userList0.get(i).getFirst_name(),i,1);
+					table.setValueAt(userList0.get(i).getLast_name(),i,2);
+					}
+				 }
+				 catch(Exception e) {
+					JOptionPane.showMessageDialog(null, e);
+				}
+			 }
+			});
+		
+		
+		dateChooser_1.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {	
+				System.out.print(dateChooser_1.getDate());
+				int[] users2= {0,0,0,0,0,0,0,0,0};
+				ArrayList<Counters> counterList1 = new ArrayList<>();		
+				ArrayList<Users> userList1 = new ArrayList<>();
+				java.util.Date dt = dateChooser.getDate();
+				java.util.Date dt1 = dateChooser_1.getDate();
+				java.text.SimpleDateFormat sdf = 
+				     new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String date = sdf.format(dt);
+				String date1 = sdf.format(dt1);
+				java.sql.PreparedStatement myStmt = null;
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					connection = DriverManager.getConnection(url, username, password);
+					myStmt = connection.prepareStatement("SELECT * FROM counters WHERE date_of_change >= ? AND date_of_change <= ?");
+					myStmt.setString(1, date);
+					myStmt.setString(2, date1);
+					ResultSet rs= myStmt.executeQuery();
+					Counters counter;
+					while(rs.next()) {
+						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+						users2[rs.getInt("user_id")]++;
+						counterList1.add(counter);
+					}
+				 }
+				 catch(Exception e) {
+					JOptionPane.showMessageDialog(null, e);
+				}
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					connection = DriverManager.getConnection(url, username, password);
+					for(int j=0;j<users2.length;j++)
+					  if(users2[j]>0)
+						{	
+						 myStmt = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+						 myStmt.setInt(1, j);
+					
+						ResultSet rs= myStmt.executeQuery();
+						Users user;
+						while(rs.next()) {
+							user= new Users(rs.getInt("id"),rs.getString("login_name"),rs.getString("first_name"),rs.getString("last_name"));
+							userList1.add(user);
+							}	
+					}
+					table.setModel(new DefaultTableModel(columnNames,counterList1.size()));
+					for(int i=0;i<userList1.size();i++)  
+					{
+					table.setValueAt(userList1.get(i).getLogin_name(),i,0);
+					table.setValueAt(userList1.get(i).getFirst_name(),i,1);
+					table.setValueAt(userList1.get(i).getLast_name(),i,2);
+					}
+				 }
+				 catch(Exception e) {
+					JOptionPane.showMessageDialog(null, e);
+				}
+			}
+			
+		});
 	
 	}
 }
