@@ -19,6 +19,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
+
+import java.awt.Color;
+import java.awt.SystemColor;
+import java.awt.Font;
 
 public class SecondFrame extends JFrame {
 
@@ -33,7 +40,8 @@ public class SecondFrame extends JFrame {
 	private JTable table;
 	private JTable table_1;
 
-	
+
+
 	/**
 	 * Launch the application.
 	 */
@@ -54,9 +62,10 @@ public class SecondFrame extends JFrame {
 	 * Create the frame.
 	 * @throws ParseException 
 	 */
+	@SuppressWarnings({ "rawtypes", "serial", "unchecked" })
 	public SecondFrame() throws ParseException {	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 576, 544);
+		setBounds(100, 100, 588, 549);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -92,7 +101,7 @@ public class SecondFrame extends JFrame {
 			ResultSet rs= myStmt.executeQuery();
 			Counters counter;
 			while(rs.next()) {
-				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getInt("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
 				users[rs.getInt("user_id")]++;
 				counterList.add(counter);
 			}
@@ -121,7 +130,8 @@ public class SecondFrame extends JFrame {
 		 catch(Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 		}
-				
+			
+		System.out.print(counterList.size());
 		
 		JLabel lblNewLabel = new JLabel("Start Date");
 		lblNewLabel.setBounds(129, 33, 58, 14);
@@ -132,40 +142,140 @@ public class SecondFrame extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(98, 92, 354, 134);
+		scrollPane.setBounds(98, 92, 377, 138);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
-		table_1 = new JTable();
 		scrollPane.setViewportView(table);
 		String[] columnNames = {"Login","First Name","Last Name"};
-		String[] columnNames_1 = {"Counter Name","Counter Value"};
 		table.setModel(new DefaultTableModel(columnNames,counterList.size()));
-		table_1.setModel(new DefaultTableModel(columnNames_1,counterList.size()));
+		for(int i=0;i<userList.size();i++)  
+		{
+		table.setValueAt(userList.get(i).getLogin_name(),i,0);
+		table.setValueAt(userList.get(i).getFirst_name(),i,1);
+		table.setValueAt(userList.get(i).getLast_name(),i,2);
+		}
+		
+////////////////////////////////////////////////////////		 Counters Section 			///////////////////////////////////////////////////////
+		
+		table_1 = new JTable();	
+		String[] columnNames_1 = {"Counter Name","Counter Value"};
+		
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(98, 253, 232, 112);
+		contentPane.add(scrollPane_1);
+		scrollPane_1.setViewportView(table_1);		
 		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("All Users");
-		chckbxNewCheckBox.setBounds(53, 256, 80, 23);
-		contentPane.add(chckbxNewCheckBox);
+		chckbxNewCheckBox.setBounds(377, 314, 80, 23);
+		contentPane.add(chckbxNewCheckBox);		
+		
+
+		JList list = new JList();
+		list.setBackground(SystemColor.textHighlightText);
+		list.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Version", "nbOfDaysUsed", "nbOfComments", "usedFeatures"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(final int index) {
+				return values[index];
+			}
+		});
+	
+		list.setToolTipText("");
+		list.setBounds(118, 396, 107, 95);
+		contentPane.add(list);
+		
+		@SuppressWarnings("rawtypes")
+		JList list_1 = new JList();
+		list_1.setBackground(SystemColor.textHighlightText);
+		DefaultListModel demoList = new DefaultListModel();
+		list_1.setBounds(340, 396, 100, 95);
+		contentPane.add(list_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Availible Counters:");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_2.setBackground(Color.WHITE);
+		lblNewLabel_2.setBounds(118, 378, 120, 14);
+		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_2_1 = new JLabel("Selected Counters:");
+		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel_2_1.setBounds(330, 376, 127, 14);
+		contentPane.add(lblNewLabel_2_1);		
+		
+		
+		JButton btnNewButton_2 = new JButton("Select");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int x = list.getSelectedIndex();
+				String y = (String) list.getModel().getElementAt(x);			
+				demoList.addElement(y);
+				list_1.setModel(demoList);
+			}
+		});
+		btnNewButton_2.setBounds(241, 393, 89, 23);
+		contentPane.add(btnNewButton_2);
 		
 		JButton btnNewButton = new JButton("Show Selected Counters");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(chckbxNewCheckBox.isSelected()) 
+				{
+					String[] columnNames_2 = {"Counter Name","Counter Value"};
+					table_1.setModel(new DefaultTableModel(columnNames_2,counterList.size()));
+					for(int i=0;i<counterList.size();i++)  
+					{
+						table_1.setValueAt(counterList.get(i).getCounter_name(),i,0);
+						table_1.setValueAt(counterList.get(i).getCounter_value(),i,1);
+					 }
+				  }
+				else {
+					 int k = table.getSelectedRow();
+					 int p=-1;
+					 String[] columnNames_2 = {"Counter Name","Counter Value"};
+					 table_1.setModel(new DefaultTableModel(columnNames_2,counterList.size()));
+					 for(int i=0;i<userList.size();i++)
+						 if(userList.get(i).getLogin_name().equals(table.getValueAt(k,0)))
+							 for(int j=0;j<counterList.size();j++)
+								 if(counterList.get(j).getUser_id()==userList.get(i).getId())
+								 	{
+									 ++p;
+									 table_1.setValueAt(counterList.get(j).getCounter_name(),p,0);
+									 table_1.setValueAt(counterList.get(j).getCounter_value(),p,1);
+								 	}
 				
-			}
+					}
+			 }
 		});
-		btnNewButton.setBounds(139, 256, 162, 23);
+		btnNewButton.setBounds(340, 284, 162, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Show ALL Counters");
-		btnNewButton_1.setBounds(329, 256, 153, 23);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(!chckbxNewCheckBox.isSelected())
+				{
+					
+					table_1.setModel(new DefaultTableModel(columnNames_1,counterList.size()));
+					for(int i=0;i<counterList.size();i++)  
+					{
+						table_1.setValueAt(counterList.get(i).getCounter_name(),i,0);
+						table_1.setValueAt(counterList.get(i).getCounter_value(),i,1);
+					 }
+				 }
+			}
+		});
+		btnNewButton_1.setBounds(340, 250, 162, 23);
 		contentPane.add(btnNewButton_1);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(98, 316, 354, 134);
-		contentPane.add(scrollPane_1);
-		scrollPane_1.setViewportView(table_1);
+
 		
 		
+		
+		
+///////////////////////////////////////////////////////////			 Date Listeners 		////////////////////////////////////////////////////////////
 
 		dateChooser.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent arg0) {
@@ -189,7 +299,7 @@ public class SecondFrame extends JFrame {
 					ResultSet rs= myStmt.executeQuery();
 					Counters counter;
 					while(rs.next()) {
-						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getInt("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
 						users1[rs.getInt("user_id")]++;
 						counterList0.add(counter);
 					}
@@ -250,7 +360,7 @@ public class SecondFrame extends JFrame {
 					ResultSet rs= myStmt.executeQuery();
 					Counters counter;
 					while(rs.next()) {
-						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+						counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getInt("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
 						users2[rs.getInt("user_id")]++;
 						counterList1.add(counter);
 					}
