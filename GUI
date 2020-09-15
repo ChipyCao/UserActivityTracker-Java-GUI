@@ -39,7 +39,7 @@ public class GUI extends JFrame{
 			ResultSet rs= st.executeQuery(query0);
 			Counters counter;
 			while(rs.next()) {
-				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getString("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
+				counter= new Counters(rs.getInt("id"),rs.getInt("type"),rs.getString("counter_name"),rs.getInt("counter_value"),rs.getDate("date_of_change"),rs.getInt("user_id"));
 				counterList.add(counter);
 			}
 		 }
@@ -86,31 +86,35 @@ public class GUI extends JFrame{
 			switch (list.get(i).getDate_of_change().getMonth()){
 			case 8:
 				{
+				if(list.get(i).getCounter_name().equals("nbOfDaysUsed"))
+					sep.setNbOfDaysUsed(list.get(i).getCounter_value());
 				sep.users[list.get(i).getUser_id()]+=1;
 				if(sep.users[list.get(i).getUser_id()]==1)
 					sep.nbOfUsers++;
-				sep.setNbOfDaysUsed(sep.getNbOfDaysUsed()+1);
 				break;}
 			case 9:
 				{
+				if(list.get(i).getCounter_name().equals("nbOfDaysUsed"))
+					oct.setNbOfDaysUsed(list.get(i).getCounter_value());
 				oct.users[list.get(i).getUser_id()]+=1;
 				if(oct.users[list.get(i).getUser_id()]==1)
 					oct.nbOfUsers++;
-				oct.setNbOfDaysUsed(oct.getNbOfDaysUsed()+1);
 				break;}
 			case 10:
 			    {
+			    if(list.get(i).getCounter_name().equals("nbOfDaysUsed"))
+			    	nov.setNbOfDaysUsed(list.get(i).getCounter_value());
 				nov.users[list.get(i).getUser_id()]+=1;
 				if(nov.users[list.get(i).getUser_id()]==1)
 					nov.nbOfUsers++;
-				nov.setNbOfDaysUsed(nov.getNbOfDaysUsed()+1);
 				break;}
 			case 11:
 				{
+				if(list.get(i).getCounter_name().equals("nbOfDaysUsed"))
+					dec.setNbOfDaysUsed(list.get(i).getCounter_value());
 				dec.users[list.get(i).getUser_id()]+=1;
 				if(dec.users[list.get(i).getUser_id()]==1)
 					dec.nbOfUsers++;
-				dec.setNbOfDaysUsed(dec.getNbOfDaysUsed()+1);
 				break;}
 			}
 		}
