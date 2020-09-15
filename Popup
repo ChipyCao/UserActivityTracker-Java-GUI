@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
-import com.jgoodies.forms.factories.DefaultComponentFactory;
 import java.awt.Font;
 
 public class Popup {
@@ -100,23 +99,6 @@ public class Popup {
 		ArrayList<Users> list = userList();		
 		table = new JTable();
 		scrollPane.setViewportView(table);
-		/*switch(x) {
-		case 8:
-			{
-			int y=
-			break;
-			}
-		case 9:
-			{
-			break;
-			}
-		case 10:
-			{
-			break;}
-		case 11:
-			{
-			break;}
-		} */
 
 		String[] columnNames = {"Login","First Name","Last Name"};
 		table.setModel(new DefaultTableModel(columnNames,x.length));
