@@ -86,13 +86,12 @@ public class Popup {
 	 */
 	private void initialize(int x[]) {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 391, 277);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 428, 300);
 		frame.getContentPane().setLayout(null);
 		
 		//Setting up a scrollable pane for the table
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 53, 354, 134);
+		scrollPane.setBounds(28, 73, 356, 138);
 		frame.getContentPane().add(scrollPane);
 	
 		//Creating the table & populating it with data from the database
@@ -170,12 +169,12 @@ public class Popup {
 		    }
 		  }
 		});
-		btnNewButton.setBounds(140, 198, 89, 23);
+		btnNewButton.setBounds(163, 222, 89, 23);
 		frame.getContentPane().add(btnNewButton);
 		
 		JLabel lblNewLabel = new JLabel(" Active Users this Month:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblNewLabel.setBounds(80, 19, 219, 23);
+		lblNewLabel.setFont(new Font("Century Gothic", Font.BOLD, 25));
+		lblNewLabel.setBounds(62, 19, 311, 37);
 		frame.getContentPane().add(lblNewLabel);
 		
 	}
