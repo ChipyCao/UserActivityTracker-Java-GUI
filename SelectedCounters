@@ -2,9 +2,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 import java.awt.Font;
-import java.awt.SystemColor;
+import javax.swing.JLabel;
 
 public class SelectedCounters {
 
@@ -44,15 +43,13 @@ public class SelectedCounters {
 		frame.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 74, 403, 164);
+		scrollPane.setBounds(20, 89, 393, 149);
 		frame.getContentPane().add(scrollPane);
 		scrollPane.setViewportView(table_1);
 		
-		JTextPane txtpnSelectedCounters = new JTextPane();
-		txtpnSelectedCounters.setBackground(SystemColor.control);
-		txtpnSelectedCounters.setFont(new Font("Century Gothic", Font.BOLD, 25));
-		txtpnSelectedCounters.setText(" Selected Counters - All Users");
-		txtpnSelectedCounters.setBounds(26, 25, 369, 38);
-		frame.getContentPane().add(txtpnSelectedCounters);
+		JLabel lblNewLabel = new JLabel(" Selected Counters - All Users");
+		lblNewLabel.setFont(new Font("Century Gothic", Font.BOLD, 25));
+		lblNewLabel.setBounds(30, 11, 371, 54);
+		frame.getContentPane().add(lblNewLabel);
 	}
 }
