@@ -82,14 +82,14 @@ public class SecondFrame extends JFrame {
 		long millis=System.currentTimeMillis();  
 	    java.sql.Date date = new java.sql.Date(millis);  
 		dateChooser.setDate(date);
-		dateChooser.setBounds(98, 52, 127, 20);
+		dateChooser.setBounds(98, 107, 127, 20);
 		contentPane.add(dateChooser);
 		
 		
 		JDateChooser dateChooser_1 = new JDateChooser();
 		dateChooser_1.setDateFormatString("MMMM yyyy");
 		dateChooser_1.setDate(date);
-		dateChooser_1.setBounds(313, 52, 127, 20);
+		dateChooser_1.setBounds(348, 107, 127, 20);
 		contentPane.add(dateChooser_1);
 		
 		
@@ -133,15 +133,15 @@ public class SecondFrame extends JFrame {
 		}
 		
 		JLabel lblNewLabel = new JLabel("Start Date");
-		lblNewLabel.setBounds(129, 33, 58, 14);
+		lblNewLabel.setBounds(125, 91, 58, 14);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("End Date");
-		lblNewLabel_1.setBounds(354, 33, 50, 14);
+		lblNewLabel_1.setBounds(385, 91, 50, 14);
 		contentPane.add(lblNewLabel_1);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(98, 92, 377, 138);
+		scrollPane.setBounds(98, 133, 377, 117);
 		contentPane.add(scrollPane);
 		
 		JButton btnNewButton_0 = new JButton("Return to 1st Frame");
@@ -175,12 +175,12 @@ public class SecondFrame extends JFrame {
 		
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(98, 253, 232, 112);
+		scrollPane_1.setBounds(98, 261, 377, 108);
 		contentPane.add(scrollPane_1);
 		scrollPane_1.setViewportView(table_1);		
 		
 		JCheckBox chckbxNewCheckBox = new JCheckBox("All Users");
-		chckbxNewCheckBox.setBounds(377, 314, 80, 23);
+		chckbxNewCheckBox.setBounds(10, 346, 80, 23);
 		contentPane.add(chckbxNewCheckBox);		
 		
 		
@@ -197,29 +197,29 @@ public class SecondFrame extends JFrame {
 		});
 	
 		list.setToolTipText("");
-		list.setBounds(98, 396, 107, 80);
+		list.setBounds(208, 422, 100, 80);
 		contentPane.add(list);
 		
 
 		JList list_1 = new JList();
 		list_1.setBackground(SystemColor.textHighlightText);
 		DefaultListModel demoList = new DefaultListModel();
-		list_1.setBounds(321, 396, 100, 80);
+		list_1.setBounds(435, 422, 100, 80);
 		contentPane.add(list_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Availible Counters:");
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblNewLabel_2.setBackground(Color.WHITE);
-		lblNewLabel_2.setBounds(98, 376, 120, 14);
+		lblNewLabel_2.setBounds(208, 397, 120, 14);
 		contentPane.add(lblNewLabel_2);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("Selected Counters:");
 		lblNewLabel_2_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_2_1.setBounds(313, 376, 127, 14);
+		lblNewLabel_2_1.setBounds(424, 397, 127, 14);
 		contentPane.add(lblNewLabel_2_1);		
 		
 		
-		JButton btnNewButton_2 = new JButton("Select");
+		JButton btnNewButton_2 = new JButton("Add >>");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int x = list.getSelectedIndex();
@@ -229,7 +229,7 @@ public class SecondFrame extends JFrame {
 				list_1.setModel(demoList);
 			}
 		});
-		btnNewButton_2.setBounds(215, 393, 89, 23);
+		btnNewButton_2.setBounds(328, 422, 89, 20);
 		contentPane.add(btnNewButton_2);
 		
 		JButton btnNewButton_2_1 = new JButton("Remove");
@@ -240,7 +240,7 @@ public class SecondFrame extends JFrame {
 				list_1.setModel(demoList);
 			}
 		});
-		btnNewButton_2_1.setBounds(433, 393, 89, 23);
+		btnNewButton_2_1.setBounds(328, 464, 89, 20);
 		contentPane.add(btnNewButton_2_1);
 		
 		
@@ -325,7 +325,7 @@ public class SecondFrame extends JFrame {
 			 }
 		});
 
-		btnNewButton.setBounds(340, 284, 162, 23);
+		btnNewButton.setBounds(10, 419, 162, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Show ALL Counters");
@@ -347,8 +347,13 @@ public class SecondFrame extends JFrame {
 				}
 			}
 		});
-		btnNewButton_1.setBounds(340, 250, 162, 23);
+		btnNewButton_1.setBounds(10, 388, 162, 23);
 		contentPane.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_3 = new JLabel("Section 2");
+		lblNewLabel_3.setFont(new Font("Century Gothic", Font.BOLD, 35));
+		lblNewLabel_3.setBounds(209, 25, 170, 55);
+		contentPane.add(lblNewLabel_3);
 		
 
 		
