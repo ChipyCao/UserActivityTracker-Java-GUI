@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JMonthChooser;
-import com.toedter.calendar.JYearChooser;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -18,6 +17,9 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import javax.swing.JTextPane;
+import java.awt.Font;
+import java.awt.SystemColor;
 
 public class GUI extends JFrame{
 
@@ -128,16 +130,16 @@ public class GUI extends JFrame{
 		contentPane.setLayout(null);
 		
 		JLabel Month = new JLabel(" Month:");
-		Month.setBounds(81, 70, 106, 14);
+		Month.setBounds(98, 107, 106, 14);
 		contentPane.add(Month);
 
 
 		//////////////////////////////////////     Nb of users current month    /////////////////
 		JLabel lblNewLabel = new JLabel(" Users this month:");
-		lblNewLabel.setBounds(77, 107, 106, 14);
+		lblNewLabel.setBounds(94, 144, 106, 14);
 		contentPane.add(lblNewLabel);
 		textField_1 = new JTextField(String.valueOf(sep.nbOfUsers));
-		textField_1.setBounds(193, 104, 240, 20);
+		textField_1.setBounds(210, 141, 240, 20);
 		contentPane.add(textField_1);
 		textField_1.setColumns(10);
 		
@@ -145,18 +147,20 @@ public class GUI extends JFrame{
 		
 		////////////////////////////////////// Nb of days used in current month //////////////////
 		JLabel lblNewLabel_1 = new JLabel("Days used:");
-		lblNewLabel_1.setBounds(81, 138, 102, 14);
+		lblNewLabel_1.setBounds(98, 175, 102, 14);
 		contentPane.add(lblNewLabel_1);
 		textField_2 = new JTextField(String.valueOf(sep.nbOfDaysUsed));
-		textField_2.setBounds(193, 135, 240, 20);
+		textField_2.setBounds(210, 172, 240, 20);
 		contentPane.add(textField_2);
 		textField_2.setColumns(10);
 		
 		monthChooser = new JMonthChooser();
 		monthChooser.getMonth();
-		monthChooser.setBounds(193, 70, 116, 20);
+		monthChooser.setBounds(210, 107, 116, 20);
 		contentPane.add(monthChooser);
 
+		
+		
 		/////////////////////////////////////////////////////    Month Changed Event /////////////////
 		monthChooser.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent Month) {
@@ -165,27 +169,23 @@ public class GUI extends JFrame{
 					{
 					textField_1.setText(String.valueOf(sep.nbOfUsers));
 					textField_2.setText(String.valueOf(sep.nbOfDaysUsed));
-					System.out.print("sept");
 					break;
 					}
 				case 9:
 					{
 					textField_1.setText(String.valueOf(oct.nbOfUsers));
 					textField_2.setText(String.valueOf(oct.nbOfDaysUsed));
-					System.out.print("oct");
 					break;
 					}
 				case 10:
 					{
 					textField_1.setText(String.valueOf(nov.nbOfUsers));
 					textField_2.setText(String.valueOf(nov.nbOfDaysUsed));
-					System.out.print("nov");
 					break;}
 				case 11:
 					{
 					textField_1.setText(String.valueOf(dec.nbOfUsers));
 					textField_2.setText(String.valueOf(dec.nbOfDaysUsed));
-					System.out.print("dec");
 					break;}
 				}
 			}
@@ -194,10 +194,6 @@ public class GUI extends JFrame{
 		///////////////////////////////////////////////////////////////////////////////////////////////
 		
 		
-		
-		JYearChooser yearChooser = new JYearChooser();
-		yearChooser.setBounds(308, 70, 47, 20);
-		contentPane.add(yearChooser);	
 		
 		
 		JButton btnNewButton = new JButton("Show Users");
@@ -230,7 +226,7 @@ public class GUI extends JFrame{
 				}
 			}
 		});
-		btnNewButton.setBounds(232, 176, 106, 23);
+		btnNewButton.setBounds(249, 213, 106, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Switch to 2nd frame");
@@ -248,7 +244,15 @@ public class GUI extends JFrame{
 			}
 		});
 
-		btnNewButton_1.setBounds(202, 230, 163, 23);
+		btnNewButton_1.setBounds(10, 262, 163, 23);
 		contentPane.add(btnNewButton_1);
+		
+		JTextPane txtpnSection = new JTextPane();
+		txtpnSection.setBackground(SystemColor.control);
+		txtpnSection.setFont(new Font("Century Gothic", Font.BOLD, 35));
+		txtpnSection.setText("Section 1");
+		txtpnSection.setBounds(197, 33, 163, 52);
+		contentPane.add(txtpnSection);
+		
 	}
 }
