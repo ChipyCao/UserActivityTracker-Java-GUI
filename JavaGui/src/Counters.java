@@ -17,7 +17,7 @@ public class Counters {
 		this.date_of_change = date_of_change;
 		this.user_id = user_id;
 	}
-	public Integer getId() {
+	public Integer getId()  {
 		return id;
 	}
 	public void setId(Integer id) {
